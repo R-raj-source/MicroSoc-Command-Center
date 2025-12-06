@@ -1,5 +1,5 @@
-const express = require("express");
-const { addLog, getLogs } = require("../controllers/logController");
+import express from "express";
+import { addLog, getLogs } from "../controllers/logController.js";
 
 const router = express.Router();
 
@@ -9,4 +9,4 @@ router.post("/", addLog);
 // Get logs
 router.get("/", getLogs);
 
-module.exports = router;
+export default router;

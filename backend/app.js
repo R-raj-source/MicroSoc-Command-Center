@@ -1,5 +1,6 @@
-const express = require("express");
-const cors = require("cors");
+import express from "express";
+import cors from "cors";
+import logRoutes from "./routes/logRoutes.js";
 
 const app = express();
 
@@ -8,7 +9,6 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-const logRoutes = require("./routes/logRoutes");
 app.use("/api/logs", logRoutes);
 
 // Test Route
@@ -16,4 +16,4 @@ app.get("/", (req, res) => {
   res.send("✅ Backend API is running!");
 });
 
-module.exports = app;
+export default app;

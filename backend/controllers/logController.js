@@ -1,4 +1,4 @@
-const Log = require("../models/Log");
+import Log from "../models/Log.js";
 
 // Threat classification rules
 function classifyThreat(log) {
@@ -8,7 +8,8 @@ function classifyThreat(log) {
   return "NONE";
 }
 
-exports.addLog = async (req, res) => {
+// Add log
+export const addLog = async (req, res) => {
   try {
     const threatLevel = classifyThreat(req.body);
 
@@ -30,7 +31,7 @@ exports.addLog = async (req, res) => {
 };
 
 // Fetch all logs
-exports.getLogs = async (req, res) => {
+export const getLogs = async (req, res) => {
   try {
     const logs = await Log.find().sort({ timestamp: -1 });
     res.json({ success: true, data: logs });
