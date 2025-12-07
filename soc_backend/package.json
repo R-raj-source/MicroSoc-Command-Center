@@ -1,0 +1,30 @@
+{
+  "name": "mini-soc-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Mini Security Operations Center - backend (Express, MongoDB, Socket.io)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js --watch . --ext js,json",
+    "lint": "eslint . --ext .js",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "helmet": "^7.2.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^7.8.8",
+    "morgan": "^1.10.1",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "nodemon": "^3.1.11"
+  }
+}
