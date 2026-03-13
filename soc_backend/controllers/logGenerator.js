@@ -1,13 +1,13 @@
+// controllers/logGenerator.js
 import Log from "../models/Log.js";
-import classifyLog from "./threatEngine.js"; // Make sure default import
+import classifyLog from "./threatEngine.js";
+import { getIO } from "../socket.js";           // ← NEW
 
-// Generate random IP
 const randomIP = () =>
   `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(
     Math.random() * 255
   )}.${Math.floor(Math.random() * 255)}`;
 
-// Possible attack types
 const attackTypes = [
   "Brute Force",
   "Port Scan",
@@ -15,10 +15,9 @@ const attackTypes = [
   "SQL Injection",
   "DDoS",
   "Privilege Escalation",
-  "Unauthorized Access"
+  "Unauthorized Access",
 ];
 
-// Severity mapping
 const severityMap = {
   "Brute Force": "High",
   "Port Scan": "Medium",
@@ -26,10 +25,9 @@ const severityMap = {
   "SQL Injection": "High",
   "DDoS": "Critical",
   "Privilege Escalation": "High",
-  "Unauthorized Access": "Medium"
+  "Unauthorized Access": "Medium",
 };
 
-// Generate a single log
 export const generateRandomLog = async () => {
   try {
     const attackType = attackTypes[Math.floor(Math.random() * attackTypes.length)];
@@ -40,21 +38,27 @@ export const generateRandomLog = async () => {
       targetSystem: `server-${Math.floor(Math.random() * 10)}`,
       severity: severityMap[attackType],
       message: `${attackType} attempt detected`,
-      classified: false, // important for threat engine
-      timestamp: new Date() // add timestamp
+      classified: false,
+      timestamp: new Date(),
     });
 
     await log.save();
     console.log("Generated Log:", log.attackType, log.sourceIP);
 
-    // Trigger threat engine immediately
+    // ─────────────────────────────────────────────────────────
+    // EMIT new_log event to ALL connected frontend clients
+    // Every browser that has the dashboard open receives this
+    // instantly via the persistent WebSocket connection
+    // ─────────────────────────────────────────────────────────
+    getIO().emit("new_log", log);               // ← NEW
+
+    // Trigger threat engine to classify this log
     await classifyLog();
   } catch (err) {
     console.error("Error generating log:", err);
   }
 };
 
-// Start continuous log generation
 export const startLogGenerator = (intervalMs = 5000) => {
   console.log(`Starting log generator every ${intervalMs / 1000}s`);
   setInterval(generateRandomLog, intervalMs);
